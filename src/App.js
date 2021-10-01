@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import CourseList from './components/CourseList';
 
-
 const Banner = ({ title }) =>(
   <h1> { title } </h1>
 );
