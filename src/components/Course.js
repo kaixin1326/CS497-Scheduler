@@ -1,9 +1,9 @@
 import { getCourseTerm, hasConflict } from "../utilities/times";
-import { setData, useUserState} from "../utilities/firebase";
+import { setData, useUserState } from "../utilities/firebase";
 
 const meetsPat = /^ *((?:M|Tu|W|Th|F)+) +(\d\d?):(\d\d) *[ -] *(\d\d?):(\d\d) *$/;
 
-const timeParts = meets => {
+export const timeParts = meets => {
   const [match, days, hh1, mm1, hh2, mm2] = meetsPat.exec(meets) || [];
   return !match ? {} : {
     days,
@@ -15,11 +15,11 @@ const timeParts = meets => {
 };
 
 const getCourseNumber = course => (
-    course.id.slice(1,4)
+  course.id.slice(1, 4)
 );
 
 const toggle = (x, lst) => (
-    lst.includes(x) ? lst.filter(y => y !== x) : [x, ...lst]
+  lst.includes(x) ? lst.filter(y => y !== x) : [x, ...lst]
 );
 
 const getCourseMeetingData = course => {
@@ -40,23 +40,22 @@ const reschedule = async (course, meets) => {
   }
 };
 
-const Course = ({ course, selected, setSelected }) => 
-{
+const Course = ({ course, selected, setSelected }) => {
   const isSelected = selected.includes(course);
   const isDisabled = !isSelected && hasConflict(course, selected);
   const [user] = useUserState();
   const style = {
     backgroundColor: isDisabled ? 'lightgrey' : isSelected ? 'lightgreen' : 'white'
   };
-  return(
+  return (
     <div className="card m-1 p-2"
-    style = { style }
-      onClick = { isDisabled ? null : ()=> setSelected(toggle(course, selected)) }
+      style={style}
+      onClick={isDisabled ? null : () => setSelected(toggle(course, selected))}
       onDoubleClick={!user ? null : () => reschedule(course, getCourseMeetingData(course))}>
       <div className="card-body">
-        <div className="card-title">{ getCourseTerm(course) } CS { getCourseNumber(course) }</div>
-        <div className="card-text">{ course.title }</div>
-        <div className="card-text">{ course.meets }</div>
+        <div className="card-title">{getCourseTerm(course)} CS {getCourseNumber(course)}</div>
+        <div className="card-text">{course.title}</div>
+        <div className="card-text">{course.meets}</div>
       </div>
     </div>
   );
